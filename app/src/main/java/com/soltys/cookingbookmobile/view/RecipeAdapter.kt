@@ -26,8 +26,13 @@ class RecipeAdapter(private val context : Activity, private val arrayList : Arra
             .into(imageView)
 
         recipeName.text = arrayList[position].name
-        description.text = arrayList[position].description
+        description.text = formatText(arrayList[position].description)
 
         return view
+    }
+
+    private fun formatText(input: String) : String {
+        val regex = "<a.*a>"
+        return input.replace(regex.toRegex(), "")
     }
 }
