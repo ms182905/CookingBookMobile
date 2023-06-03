@@ -9,13 +9,14 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.CookingBookMobile"
+        android:theme="@style/Theme.CookingBookApp"
+        android:enableOnBackInvokedCallback="true"
         tools:targetApi="31">
         <activity
-            android:name=".view.MainActivity"
+            android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.CookingBookMobile.NoActionBar">
+            android:theme="@style/Theme.CookingBookApp.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,5 +26,4 @@
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
-
 </manifest>
