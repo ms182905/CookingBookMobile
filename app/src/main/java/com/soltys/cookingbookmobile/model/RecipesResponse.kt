@@ -13,14 +13,8 @@ data class RecipesResponse(
 
 data class RecipesItem(
 
-	@field:SerializedName("instructions")
-	val instructions: List<InstructionsItem?>? = null,
-
 	@field:SerializedName("id")
 	val id: Int? = null,
-
-	@field:SerializedName("sections")
-	val sections: List<SectionsItem?>? = null,
 
 	@field:SerializedName("name")
 	val name: String? = null,
@@ -33,34 +27,10 @@ data class RecipesItem(
 
 )
 
-data class SectionsItem( // lista skladnikow
-
-	@field:SerializedName("components")
-	val components: List<ComponentsItem?>? = null,
-)
-
-data class ComponentsItem( // skladnik
-
-	@field:SerializedName("raw_text")
-	val rawText: String? = null,
-)
-
-data class InstructionsItem( // krok instrukcji
-
-	@field:SerializedName("display_text")
-	val displayText: String? = null
-)
-
 data class ResultsItem(
-
-	@field:SerializedName("instructions")
-	val instructions: List<InstructionsItem?>? = null,
 
 	@field:SerializedName("id")
 	val id: Int? = null,
-
-	@field:SerializedName("sections")
-	val sections: List<SectionsItem?>? = null, //? - lista składnikow
 
 	@field:SerializedName("name")
 	val name: String? = null,

@@ -1,5 +1,6 @@
 package com.soltys.cookingbookmobile.networking
 
+import com.soltys.cookingbookmobile.model.RecipeDetailsResponse
 import com.soltys.cookingbookmobile.model.RecipesResponse
 import retrofit2.Call
 import retrofit2.http.GET
@@ -11,6 +12,11 @@ interface ApiService {
     fun getRecipes(
         @Query("q") phrase: String,
         @Query("from") from: String = "0",
-        @Query("size") size: String = "10",
+        @Query("size") size: String = "20"
     ): Call<RecipesResponse>
+
+    @GET("recipes/get-more-info")
+    fun getRecipeDetails(
+        @Query("id") id: String
+    ): Call<RecipeDetailsResponse>
 }

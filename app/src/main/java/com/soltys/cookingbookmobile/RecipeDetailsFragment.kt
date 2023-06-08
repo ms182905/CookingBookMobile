@@ -7,16 +7,21 @@ import android.view.ViewGroup
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.soltys.cookingbookmobile.R
+import com.soltys.cookingbookmobile.databinding.FragmentDetailsBinding
 import com.soltys.cookingbookmobile.databinding.FragmentFirstBinding
+import com.soltys.cookingbookmobile.view.RecipeAdapter
+import com.soltys.cookingbookmobile.view.RecipeIngredientsAdapter
+import com.soltys.cookingbookmobile.viewmodel.RecipeDetailsViewModel
+import com.soltys.cookingbookmobile.viewmodel.RecipeListViewModel
 
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
-class FirstFragment : Fragment() {
+class RecipeDetailsFragment : Fragment() {
 
-    private var _binding: FragmentFirstBinding? = null
+    private var _binding: FragmentDetailsBinding? = null
+    private lateinit var recipeDetailsViewModel: RecipeDetailsViewModel
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -27,24 +32,19 @@ class FirstFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        _binding = FragmentFirstBinding.inflate(inflater, container, false)
+        _binding = FragmentDetailsBinding.inflate(inflater, container, false)
         return binding.root
 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        arguments?.getString("apiId")?.let { binding.testingText.text = it }
 
-        val inData = view.findViewById(R.id.et_recipe_name) as EditText
+        recipeDetailsViewModel = RecipeDetailsViewModel()
 
-        binding.buttonFirst.setOnClickListener {
-            val editText : EditText = view.findViewById(R.id.et_recipe_name)
-            val input = editText.text.toString()
-            val bundle = Bundle()
-            bundle.putString("phrase", input)
+        arguments?.getString("phrase")?.let { recipeDetailsViewModel.getRecipeDetailsData(it) }
 
-            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment, bundle)
-        }
     }
 
     override fun onDestroyView() {

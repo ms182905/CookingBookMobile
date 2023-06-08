@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/FirstFragment"
-        android:name="com.soltys.cookingbookmobile.FirstFragment"
+        android:name="com.soltys.cookingbookmobile.SearchFragment"
         android:label="@string/first_fragment_label"
         tools:layout="@layout/fragment_first">
 
@@ -17,12 +17,24 @@
     </fragment>
     <fragment
         android:id="@+id/SecondFragment"
-        android:name="com.soltys.cookingbookmobile.SecondFragment"
+        android:name="com.soltys.cookingbookmobile.RecipeListFragment"
         android:label="@string/second_fragment_label"
         tools:layout="@layout/fragment_second">
 
         <action
             android:id="@+id/action_SecondFragment_to_FirstFragment"
             app:destination="@id/FirstFragment" />
+        <action
+            android:id="@+id/action_SecondFragment_to_recipeDetailsFragment"
+            app:destination="@id/recipeDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/recipeDetailsFragment"
+        android:name="com.soltys.cookingbookmobile.RecipeDetailsFragment"
+        android:label="fragment_details"
+        tools:layout="@layout/fragment_details" >
+        <action
+            android:id="@+id/action_recipeDetailsFragment_to_SecondFragment"
+            app:destination="@id/SecondFragment" />
     </fragment>
 </navigation>

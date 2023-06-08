@@ -3,16 +3,17 @@ package com.soltys.cookingbookmobile.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.soltys.cookingbookmobile.model.RecipeDetailsResponse
 import com.soltys.cookingbookmobile.model.RecipesResponse
 import com.soltys.cookingbookmobile.networking.ApiConfig
 import retrofit2.Callback
 import retrofit2.Call
 import retrofit2.Response
 
-class MainViewModel() : ViewModel() {
+class RecipeDetailsViewModel() : ViewModel() {
 
-    private val _recipesData = MutableLiveData<RecipesResponse>()
-    val weatherData: LiveData<RecipesResponse> get() = _recipesData
+    private val _recipeDetailsData = MutableLiveData<RecipeDetailsResponse>()
+    val recipesData: LiveData<RecipeDetailsResponse> get() = _recipeDetailsData
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
@@ -23,18 +24,18 @@ class MainViewModel() : ViewModel() {
     var errorMessage: String = ""
         private set
 
-    fun getRecipeData(phrase: String) {
+    fun getRecipeDetailsData(id: String) {
 
         _isLoading.value = true
         _isError.value = false
 
-        val client = ApiConfig.getApiService().getRecipes(phrase = phrase)
+        val client = ApiConfig.getApiService().getRecipeDetails(id = id)
 
-        client.enqueue(object : Callback<RecipesResponse> {
+        client.enqueue(object : Callback<RecipeDetailsResponse> {
 
             override fun onResponse(
-                call: Call<RecipesResponse>,
-                response: Response<RecipesResponse>
+                call: Call<RecipeDetailsResponse>,
+                response: Response<RecipeDetailsResponse>
             ) {
                 val responseBody = response.body()
                 if (!response.isSuccessful || responseBody == null) {
@@ -43,10 +44,10 @@ class MainViewModel() : ViewModel() {
                 }
 
                 _isLoading.value = false
-                _recipesData.postValue(responseBody!!)
+                _recipeDetailsData.postValue(responseBody!!)
             }
 
-            override fun onFailure(call: Call<RecipesResponse>, t: Throwable) {
+            override fun onFailure(call: Call<RecipeDetailsResponse>, t: Throwable) {
                 onError(t.message)
                 t.printStackTrace()
             }

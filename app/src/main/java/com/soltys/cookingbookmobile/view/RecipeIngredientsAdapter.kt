@@ -11,7 +11,7 @@ import com.soltys.cookingbookmobile.R
 import com.soltys.cookingbookmobile.model.Recipe
 import com.squareup.picasso.Picasso
 
-class RecipeAdapter(private val context : Activity, private val arrayList : ArrayList<Recipe>) : ArrayAdapter<Recipe>(
+class RecipeIngredientsAdapter(private val context : Activity, private val arrayList : ArrayList<Recipe>) : ArrayAdapter<Recipe>(
     context, R.layout.list_item, arrayList) {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val inflater : LayoutInflater = LayoutInflater.from(context)
