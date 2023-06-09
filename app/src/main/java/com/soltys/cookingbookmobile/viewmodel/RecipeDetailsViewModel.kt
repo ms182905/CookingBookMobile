@@ -4,13 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.soltys.cookingbookmobile.model.RecipeDetailsResponse
-import com.soltys.cookingbookmobile.model.RecipesResponse
 import com.soltys.cookingbookmobile.networking.ApiConfig
-import retrofit2.Callback
 import retrofit2.Call
+import retrofit2.Callback
 import retrofit2.Response
 
-class RecipeDetailsViewModel() : ViewModel() {
+class RecipeDetailsViewModel : ViewModel() {
 
     private val _recipeDetailsData = MutableLiveData<RecipeDetailsResponse>()
     val recipesData: LiveData<RecipeDetailsResponse> get() = _recipeDetailsData

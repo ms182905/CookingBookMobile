@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginTop="88dp"
-        android:hint="auau"
+        android:hint="What do You want to search?"
         android:inputType="text"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
