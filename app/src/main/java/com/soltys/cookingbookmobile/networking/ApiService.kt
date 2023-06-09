@@ -12,7 +12,7 @@ interface ApiService {
     fun getRecipes(
         @Query("q") phrase: String,
         @Query("from") from: String = "0",
-        @Query("size") size: String = "20"
+        @Query("size") size: String = "10"
     ): Call<RecipesResponse>
 
     @GET("recipes/get-more-info")
