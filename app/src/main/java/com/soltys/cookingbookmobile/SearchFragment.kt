@@ -39,6 +39,10 @@ class SearchFragment : Fragment() {
 
             findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment, bundle)
         }
+
+        binding.goToFavouritesButton.setOnClickListener {
+            findNavController().navigate(R.id.action_FirstFragment_to_favouriteRecipeListFragment)
+        }
     }
 
     override fun onDestroyView() {

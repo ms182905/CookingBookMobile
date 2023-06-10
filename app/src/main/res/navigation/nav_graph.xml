@@ -14,6 +14,9 @@
         <action
             android:id="@+id/action_FirstFragment_to_SecondFragment"
             app:destination="@id/SecondFragment" />
+        <action
+            android:id="@+id/action_FirstFragment_to_favouriteRecipeListFragment"
+            app:destination="@id/favouriteRecipeListFragment" />
     </fragment>
     <fragment
         android:id="@+id/SecondFragment"
@@ -22,9 +25,6 @@
         tools:layout="@layout/fragment_list">
 
         <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
-        <action
             android:id="@+id/action_SecondFragment_to_recipeDetailsFragment"
             app:destination="@id/recipeDetailsFragment" />
     </fragment>
@@ -32,9 +32,19 @@
         android:id="@+id/recipeDetailsFragment"
         android:name="com.soltys.cookingbookmobile.RecipeDetailsFragment"
         android:label="fragment_details"
-        tools:layout="@layout/fragment_details" >
+        tools:layout="@layout/fragment_details" />
+    <fragment
+        android:id="@+id/favouriteRecipeListFragment"
+        android:name="com.soltys.cookingbookmobile.FavouriteRecipeListFragment"
+        android:label="FavouriteRecipeListFragment"
+        tools:layout="@layout/fragment_list">
         <action
-            android:id="@+id/action_recipeDetailsFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
+            android:id="@+id/action_favouriteRecipeListFragment_to_favouriteRecipeDetailsFragment"
+            app:destination="@id/favouriteRecipeDetailsFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/favouriteRecipeDetailsFragment"
+        android:name="com.soltys.cookingbookmobile.FavouriteRecipeDetailsFragment"
+        android:label="fragment_favourite_details"
+        tools:layout="@layout/fragment_favourite_details" />
 </navigation>

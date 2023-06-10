@@ -19,7 +19,8 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
                 + ID_COL + " INTEGER PRIMARY KEY, " +
                 NAME_COl + " TEXT, " +
                 DESCRIPTION_COL + " TEXT, " +
-                PICTURE_URL_COL + " TEXT" + ")")
+                PICTURE_URL_COL + " TEXT, " +
+                NOTE_COL + " TEXT" + ")")
 
         // we are calling sqlite
         // method for executing our query
@@ -77,7 +78,7 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
                 cursor.getString(cursor.getColumnIndex(NAME_COl)),
                 cursor.getString(cursor.getColumnIndex(PICTURE_URL_COL)),
                 cursor.getString(cursor.getColumnIndex(DESCRIPTION_COL)),
-                cursor.getString(cursor.getColumnIndex(ID_COL)).toInt()
+                cursor.getString(cursor.getColumnIndex(ID_COL)).toInt(),
             ))
 
             while (cursor.moveToNext()) {
@@ -85,8 +86,8 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
                     cursor.getString(cursor.getColumnIndex(NAME_COl)),
                     cursor.getString(cursor.getColumnIndex(PICTURE_URL_COL)),
                     cursor.getString(cursor.getColumnIndex(DESCRIPTION_COL)),
-                    cursor.getString(cursor.getColumnIndex(ID_COL)).toInt()
-                ))
+                    cursor.getString(cursor.getColumnIndex(ID_COL)).toInt(),
+                    ))
             }
         }
 
@@ -113,6 +114,31 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         db.delete(TABLE_NAME, "id = ?", arrayOf(id))
     }
 
+    fun updateRecipeNotes(id : String, note : String) {
+        if (this.isInDatabase(id)) {
+            val db = this.readableDatabase
+            val values = ContentValues()
+
+            values.put(NOTE_COL, note)
+
+            db.update(TABLE_NAME, values, "id = ?", arrayOf(id))
+        }
+    }
+
+    @SuppressLint("Range")
+    fun getRecipeNote(id : String) : String {
+        val db = this.readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE id='$id'", null)
+
+        if (cursor.moveToFirst()) {
+
+            if (cursor.getString(cursor.getColumnIndex(NOTE_COL)) != null)
+                return cursor.getString(cursor.getColumnIndex(NOTE_COL))
+        }
+
+        return ""
+    }
+
     companion object{
         // here we have defined variables for our database
 
@@ -120,7 +146,7 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         private val DATABASE_NAME = "RECIPE_STORAGE"
 
         // below is the variable for database version
-        private val DATABASE_VERSION = 2
+        private val DATABASE_VERSION = 3
 
         // below is the variable for table name
         val TABLE_NAME = "recipe_table"
@@ -135,5 +161,7 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         val DESCRIPTION_COL = "description"
 
         val PICTURE_URL_COL = "picture_url"
+
+        val NOTE_COL = "note"
     }
 }
