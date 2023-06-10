@@ -18,7 +18,7 @@ class ApiConfig {
                 val original: Request = chain.request()
 
                 val requestBuilder: Request.Builder = original.newBuilder()
-                    .addHeader("X-RapidAPI-Key", "40faa789d4mshbc3b0eb07e98efap1429f8jsn889b682016c1")
+                    .addHeader("X-RapidAPI-Key", "b688678d05msh3ed31cd4d7675cap1dc97bjsn8a12ac1b28b1")
                     .addHeader("X-RapidAPI-Host", "tasty.p.rapidapi.com")
                 val request: Request = requestBuilder.build()
                 chain.proceed(request)

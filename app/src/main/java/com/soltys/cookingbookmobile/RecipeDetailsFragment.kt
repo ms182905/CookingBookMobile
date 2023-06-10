@@ -1,5 +1,8 @@
 package com.soltys.cookingbookmobile
 
+import android.graphics.Color
+import android.graphics.ColorFilter
+import android.graphics.PorterDuff
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,9 +10,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import com.soltys.cookingbookmobile.databinding.FragmentDetailsBinding
-import com.soltys.cookingbookmobile.model.Ingredient
+import com.soltys.cookingbookmobile.db.DBHelper
 import com.soltys.cookingbookmobile.model.RecipeDetailsResponse
-import com.soltys.cookingbookmobile.model.Step
 import com.soltys.cookingbookmobile.viewmodel.RecipeDetailsViewModel
 import com.squareup.picasso.Picasso
 
@@ -17,8 +19,7 @@ class RecipeDetailsFragment : Fragment() {
 
     private var _binding: FragmentDetailsBinding? = null
     private lateinit var recipeDetailsViewModel: RecipeDetailsViewModel
-    private lateinit var recipeIngredientsArrayList: ArrayList<Ingredient>
-    private lateinit var recipePreparationStepsArrayList: ArrayList<Step>
+    private lateinit var recipeDetailsData: RecipeDetailsResponse
 
     private val binding get() = _binding!!
 
@@ -32,15 +33,36 @@ class RecipeDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recipeIngredientsArrayList = ArrayList()
-        recipePreparationStepsArrayList = ArrayList()
-
         recipeDetailsViewModel = RecipeDetailsViewModel()
 
         arguments?.getString("apiId")?.let { recipeDetailsViewModel.getRecipeDetailsData(it) }
 
         recipeDetailsViewModel.recipesData.observe(viewLifecycleOwner) { recipesData ->
+            recipeDetailsData = recipesData
             setResults(recipesData)
+        }
+
+
+        binding.favouritesButton.setOnClickListener {
+
+            val db = DBHelper(this.requireContext(), null)
+            if (db.isInDatabase(recipeDetailsData.id.toString())) {
+                binding.favouritesButton.drawable.setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY )
+                db.removeRecipeFromDatabase(recipeDetailsData.id.toString())
+            }
+            else {
+                binding.favouritesButton.drawable.setColorFilter(Color.BLUE, PorterDuff.Mode.MULTIPLY )
+                db.addRecipe(recipeDetailsData.id.toString(), recipeDetailsData.name!!, recipeDetailsData.description!!, recipeDetailsData.thumbnailUrl!!)
+            }
+
+
+
+            println(recipeDetailsData.id)
+
+            val recipeList = db.getRecipes()
+
+            println(recipeList)
+
         }
     }
 
@@ -88,5 +110,13 @@ class RecipeDetailsFragment : Fragment() {
         binding.recipePicture.visibility = View.VISIBLE
         binding.ingredientsTitle.visibility = View.VISIBLE
         binding.preparationStepTitle.visibility = View.VISIBLE
+        binding.favouritesButton.visibility = View.VISIBLE
+        val db = DBHelper(this.requireContext(), null)
+        if (db.isInDatabase(recipeDetailsData.id.toString())) {
+            binding.favouritesButton.drawable.setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY )
+        }
+        else {
+            binding.favouritesButton.drawable.setColorFilter(Color.BLUE, PorterDuff.Mode.MULTIPLY )
+        }
     }
 }
