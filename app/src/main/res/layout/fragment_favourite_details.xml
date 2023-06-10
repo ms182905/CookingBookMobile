@@ -7,20 +7,20 @@
     tools:context=".FavouriteRecipeDetailsFragment">
 
     <androidx.core.widget.NestedScrollView
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fillViewport="true" >
+        android:fillViewport="true"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="50dp"
             android:nestedScrollingEnabled="true"
             android:orientation="vertical"
-            android:padding="10dip"
-            android:layout_marginBottom="50dp">
+            android:padding="10dip">
 
             <TextView
                 android:id="@+id/recipeName"
@@ -88,11 +88,11 @@
                 android:id="@+id/editTextNotes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dip"
                 android:ems="10"
                 android:inputType="textMultiLine"
-                android:layout_marginTop="10dip"
                 android:text="Notes"
-                android:visibility="invisible"/>
+                android:visibility="invisible" />
 
 
         </LinearLayout>
@@ -109,20 +109,19 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/favouritesButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:clickable="true"
-        android:src="@android:drawable/btn_star_big_off"
         android:layout_marginStart="10dp"
         android:layout_marginBottom="10dp"
+        android:clickable="true"
+        android:src="@android:drawable/btn_star_big_off"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:visibility="invisible"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

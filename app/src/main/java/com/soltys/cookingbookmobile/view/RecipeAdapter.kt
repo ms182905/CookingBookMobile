@@ -11,29 +11,27 @@ import com.soltys.cookingbookmobile.R
 import com.soltys.cookingbookmobile.model.Recipe
 import com.squareup.picasso.Picasso
 
-class RecipeAdapter(private val context : Activity, private val arrayList : ArrayList<Recipe>) : ArrayAdapter<Recipe>(
-    context, R.layout.list_item, arrayList) {
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val inflater : LayoutInflater = LayoutInflater.from(context)
-        val view : View = inflater.inflate(R.layout.list_item, null)
-        view.id = arrayList[position].apiId
+class RecipeAdapter(private val context: Activity, private val arrayList: ArrayList<Recipe>) :
+    ArrayAdapter<Recipe>(context, R.layout.list_item, arrayList) {
+  override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+    val inflater: LayoutInflater = LayoutInflater.from(context)
+    val view: View = inflater.inflate(R.layout.list_item, null)
+    view.id = arrayList[position].apiId
 
-        val imageView : ImageView = view.findViewById(R.id.recipe_picture)
-        val recipeName : TextView = view.findViewById(R.id.recipeName)
-        val description : TextView = view.findViewById(R.id.recipeDescription)
+    val imageView: ImageView = view.findViewById(R.id.recipe_picture)
+    val recipeName: TextView = view.findViewById(R.id.recipeName)
+    val description: TextView = view.findViewById(R.id.recipeDescription)
 
-        Picasso.with(context)
-            .load(arrayList[position].picture_url)
-            .into(imageView)
+    Picasso.with(context).load(arrayList[position].picture_url).into(imageView)
 
-        recipeName.text = arrayList[position].name
-        description.text = formatText(arrayList[position].description)
+    recipeName.text = arrayList[position].name
+    description.text = formatText(arrayList[position].description)
 
-        return view
-    }
+    return view
+  }
 
-    private fun formatText(input: String) : String {
-        val regex = "<a.*a>"
-        return input.replace(regex.toRegex(), "")
-    }
+  private fun formatText(input: String): String {
+    val regex = "<a.*a>"
+    return input.replace(regex.toRegex(), "")
+  }
 }

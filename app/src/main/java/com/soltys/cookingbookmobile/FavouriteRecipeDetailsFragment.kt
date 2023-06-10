@@ -1,7 +1,6 @@
 package com.soltys.cookingbookmobile
 
 import android.graphics.Color
-import android.graphics.ColorFilter
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.text.Editable
@@ -11,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
-import com.soltys.cookingbookmobile.databinding.FragmentDetailsBinding
 import com.soltys.cookingbookmobile.databinding.FragmentFavouriteDetailsBinding
 import com.soltys.cookingbookmobile.db.DBHelper
 import com.soltys.cookingbookmobile.model.RecipeDetailsResponse
@@ -20,126 +18,119 @@ import com.squareup.picasso.Picasso
 
 class FavouriteRecipeDetailsFragment : Fragment() {
 
-    private var _binding: FragmentFavouriteDetailsBinding? = null
-    private lateinit var recipeDetailsViewModel: RecipeDetailsViewModel
-    private lateinit var recipeDetailsData: RecipeDetailsResponse
+  private var _binding: FragmentFavouriteDetailsBinding? = null
+  private lateinit var recipeDetailsViewModel: RecipeDetailsViewModel
+  private lateinit var recipeDetailsData: RecipeDetailsResponse
 
-    private val binding get() = _binding!!
+  private val binding
+    get() = _binding!!
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentFavouriteDetailsBinding.inflate(inflater, container, false)
-        return binding.root
+  override fun onCreateView(
+      inflater: LayoutInflater,
+      container: ViewGroup?,
+      savedInstanceState: Bundle?
+  ): View {
+    _binding = FragmentFavouriteDetailsBinding.inflate(inflater, container, false)
+    return binding.root
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+
+    recipeDetailsViewModel = RecipeDetailsViewModel()
+
+    arguments?.getString("apiId")?.let { recipeDetailsViewModel.getRecipeDetailsData(it) }
+
+    recipeDetailsViewModel.recipesData.observe(viewLifecycleOwner) { recipesData ->
+      recipeDetailsData = recipesData
+      setResults(recipesData)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    binding.favouritesButton.setOnClickListener {
+      val db = DBHelper(this.requireContext(), null)
+      if (db.isInDatabase(recipeDetailsData.id.toString())) {
+        binding.favouritesButton.drawable.setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY)
+        db.removeRecipeFromDatabase(recipeDetailsData.id.toString())
+      } else {
+        binding.favouritesButton.drawable.setColorFilter(Color.BLUE, PorterDuff.Mode.MULTIPLY)
+        db.addRecipe(
+            recipeDetailsData.id.toString(),
+            recipeDetailsData.name!!,
+            recipeDetailsData.description!!,
+            recipeDetailsData.thumbnailUrl!!)
+      }
 
-        recipeDetailsViewModel = RecipeDetailsViewModel()
+      println(recipeDetailsData.id)
 
-        arguments?.getString("apiId")?.let { recipeDetailsViewModel.getRecipeDetailsData(it) }
+      val recipeList = db.getRecipes()
 
-        recipeDetailsViewModel.recipesData.observe(viewLifecycleOwner) { recipesData ->
-            recipeDetailsData = recipesData
-            setResults(recipesData)
-        }
+      println(recipeList)
+    }
+  }
 
+  override fun onDestroyView() {
+    super.onDestroyView()
+    _binding = null
+  }
 
-        binding.favouritesButton.setOnClickListener {
+  private fun setResults(recipeDetailsData: RecipeDetailsResponse) {
+    var preparationSteps = ""
+    recipeDetailsData.instructions?.forEach { it -> preparationSteps += it?.displayText!! + "\n\n" }
 
-            val db = DBHelper(this.requireContext(), null)
-            if (db.isInDatabase(recipeDetailsData.id.toString())) {
-                binding.favouritesButton.drawable.setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY )
-                db.removeRecipeFromDatabase(recipeDetailsData.id.toString())
-            }
-            else {
-                binding.favouritesButton.drawable.setColorFilter(Color.BLUE, PorterDuff.Mode.MULTIPLY )
-                db.addRecipe(recipeDetailsData.id.toString(), recipeDetailsData.name!!, recipeDetailsData.description!!, recipeDetailsData.thumbnailUrl!!)
-            }
-
-
-
-            println(recipeDetailsData.id)
-
-            val recipeList = db.getRecipes()
-
-            println(recipeList)
-
-        }
+    var ingredients = ""
+    recipeDetailsData.sections?.forEach { it ->
+      it?.components?.forEach { component -> ingredients += component?.rawText!! + "\n" }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
+    val db = DBHelper(this.requireContext(), null)
 
-    private fun setResults(recipeDetailsData: RecipeDetailsResponse) {
-        var preparationSteps = ""
-        recipeDetailsData.instructions?.forEach { it ->
-            preparationSteps += it?.displayText!! + "\n\n"
-        }
+    binding.recipeName.text = recipeDetailsData.name
+    binding.recipeDescription.text = formatText(recipeDetailsData.description!!)
+    binding.ingredientsView.text = ingredients
+    binding.preparationStepsView.text = preparationSteps
+    binding.editTextNotes.text =
+        Editable.Factory.getInstance()
+            .newEditable(db.getRecipeNote(recipeDetailsData.id.toString()))
 
-        var ingredients = ""
-        recipeDetailsData.sections?.forEach { it ->
-            it?.components?.forEach { component ->
-                ingredients += component?.rawText!! + "\n"
-            }
-        }
+    val imageView: ImageView = binding.recipePicture
 
-        val db = DBHelper(this.requireContext(), null)
+    Picasso.with(context).load(recipeDetailsData.thumbnailUrl).into(imageView)
 
-        binding.recipeName.text = recipeDetailsData.name
-        binding.recipeDescription.text = formatText(recipeDetailsData.description!!)
-        binding.ingredientsView.text = ingredients
-        binding.preparationStepsView.text = preparationSteps
-        binding.editTextNotes.text = Editable.Factory.getInstance().newEditable(db.getRecipeNote(recipeDetailsData.id.toString()))
+    binding.progressBar.visibility = View.INVISIBLE
+    setVisible()
 
-        val imageView: ImageView = binding.recipePicture
+    binding.editTextNotes.addTextChangedListener(
+        object : TextWatcher {
+          override fun afterTextChanged(s: Editable) {
+            db.updateRecipeNotes(recipeDetailsData.id.toString(), s.toString())
+          }
 
-        Picasso.with(context).load(recipeDetailsData.thumbnailUrl).into(imageView)
+          override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
 
-        binding.progressBar.visibility = View.INVISIBLE
-        setVisible()
-
-
-
-        binding.editTextNotes.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable) {
-                db.updateRecipeNotes(recipeDetailsData.id.toString(), s.toString())
-            }
-
-            override fun beforeTextChanged(s: CharSequence, start: Int,
-                                           count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence, start: Int,
-                                       before: Int, count: Int) {
-            }
+          override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
         })
-    }
+  }
 
-    private fun formatText(input: String): String {
-        val regex = "<a.*a>"
-        return input.replace(regex.toRegex(), "")
-    }
+  private fun formatText(input: String): String {
+    val regex = "<a.*a>"
+    return input.replace(regex.toRegex(), "")
+  }
 
-    private fun setVisible() {
-        binding.ingredientsView.visibility = View.VISIBLE
-        binding.preparationStepsView.visibility = View.VISIBLE
-        binding.recipeName.visibility = View.VISIBLE
-        binding.recipeDescription.visibility = View.VISIBLE
-        binding.recipePicture.visibility = View.VISIBLE
-        binding.ingredientsTitle.visibility = View.VISIBLE
-        binding.preparationStepTitle.visibility = View.VISIBLE
-        binding.favouritesButton.visibility = View.VISIBLE
-        binding.editTextNotes.visibility = View.VISIBLE
-        val db = DBHelper(this.requireContext(), null)
-        if (db.isInDatabase(recipeDetailsData.id.toString())) {
-            binding.favouritesButton.drawable.setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY )
-        }
-        else {
-            binding.favouritesButton.drawable.setColorFilter(Color.BLUE, PorterDuff.Mode.MULTIPLY )
-        }
+  private fun setVisible() {
+    binding.ingredientsView.visibility = View.VISIBLE
+    binding.preparationStepsView.visibility = View.VISIBLE
+    binding.recipeName.visibility = View.VISIBLE
+    binding.recipeDescription.visibility = View.VISIBLE
+    binding.recipePicture.visibility = View.VISIBLE
+    binding.ingredientsTitle.visibility = View.VISIBLE
+    binding.preparationStepTitle.visibility = View.VISIBLE
+    binding.favouritesButton.visibility = View.VISIBLE
+    binding.editTextNotes.visibility = View.VISIBLE
+    val db = DBHelper(this.requireContext(), null)
+    if (db.isInDatabase(recipeDetailsData.id.toString())) {
+      binding.favouritesButton.drawable.setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY)
+    } else {
+      binding.favouritesButton.drawable.setColorFilter(Color.BLUE, PorterDuff.Mode.MULTIPLY)
     }
+  }
 }
