@@ -8,8 +8,6 @@ import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.soltys.cookingbookmobile.databinding.FragmentSearchBinding
-
-/** A simple [Fragment] subclass as the default destination in the navigation. */
 class SearchFragment : Fragment() {
 
   private var _binding: FragmentSearchBinding? = null
