@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.soltys.cookingbookmobile.databinding.FragmentFavouriteDetailsBinding
 import com.soltys.cookingbookmobile.db.DBHelper
@@ -49,15 +50,18 @@ class FavouriteRecipeDetailsFragment : Fragment() {
     binding.favouritesButton.setOnClickListener {
       val db = DBHelper(this.requireContext(), null)
       if (db.isInDatabase(recipeDetailsData.id.toString())) {
-        binding.favouritesButton.drawable.setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY)
+        binding.favouritesButton.drawable.setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY)
         db.removeRecipeFromDatabase(recipeDetailsData.id.toString())
+        Toast.makeText(activity, "Removed from favourites", Toast.LENGTH_LONG).show()
       } else {
-        binding.favouritesButton.drawable.setColorFilter(Color.BLUE, PorterDuff.Mode.MULTIPLY)
+        binding.favouritesButton.drawable.setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY)
         db.addRecipe(
             recipeDetailsData.id.toString(),
             recipeDetailsData.name!!,
             recipeDetailsData.description!!,
             recipeDetailsData.thumbnailUrl!!)
+
+        Toast.makeText(activity, "Added to favourites", Toast.LENGTH_LONG).show()
       }
 
       println(recipeDetailsData.id)
@@ -79,8 +83,16 @@ class FavouriteRecipeDetailsFragment : Fragment() {
 
     var ingredients = ""
     recipeDetailsData.sections?.forEach { it ->
-      it?.components?.forEach { component -> ingredients += component?.rawText!! + "\n" }
+      it?.components?.forEach { component ->
+        run {
+          if (component?.rawText!! != "n/a") {
+            ingredients += component?.rawText!! + "\n"
+          }
+        }
+      }
     }
+
+    ingredients.removeRange(ingredients.length - 2, ingredients.length - 1)
 
     val db = DBHelper(this.requireContext(), null)
 
@@ -109,6 +121,13 @@ class FavouriteRecipeDetailsFragment : Fragment() {
 
           override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
         })
+
+
+    if (db.isInDatabase(recipeDetailsData.id.toString())) {
+      binding.favouritesButton.drawable.setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY)
+    } else {
+      binding.favouritesButton.drawable.setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY)
+    }
   }
 
   private fun formatText(input: String): String {
@@ -126,11 +145,5 @@ class FavouriteRecipeDetailsFragment : Fragment() {
     binding.preparationStepTitle.visibility = View.VISIBLE
     binding.favouritesButton.visibility = View.VISIBLE
     binding.editTextNotes.visibility = View.VISIBLE
-    val db = DBHelper(this.requireContext(), null)
-    if (db.isInDatabase(recipeDetailsData.id.toString())) {
-      binding.favouritesButton.drawable.setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY)
-    } else {
-      binding.favouritesButton.drawable.setColorFilter(Color.BLUE, PorterDuff.Mode.MULTIPLY)
-    }
   }
 }
