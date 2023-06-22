@@ -23,8 +23,7 @@ class RecipeDetailsViewModel : ViewModel() {
   val isError: LiveData<Boolean>
     get() = _isError
 
-  var errorMessage: String = ""
-    private set
+  private var errorMessage: String = ""
 
   fun getRecipeDetailsData(id: String) {
     _isLoading.value = true

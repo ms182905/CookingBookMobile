@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.soltys.cookingbookmobile
 
 import android.graphics.Color
@@ -28,7 +30,7 @@ class RecipeDetailsFragment : Fragment() {
       inflater: LayoutInflater,
       container: ViewGroup?,
       savedInstanceState: Bundle?
-  ): View? {
+  ): View {
     _binding = FragmentDetailsBinding.inflate(inflater, container, false)
     return binding.root
   }
@@ -83,7 +85,7 @@ class RecipeDetailsFragment : Fragment() {
     recipeDetailsData.sections?.forEach { it?.components?.forEach { component ->
       run {
         if (component?.rawText!! != "n/a") {
-          ingredients += component?.rawText!! + "\n"
+          ingredients += component.rawText + "\n"
         }
       }
     }

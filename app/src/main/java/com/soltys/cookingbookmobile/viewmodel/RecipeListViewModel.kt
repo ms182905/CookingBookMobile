@@ -23,8 +23,7 @@ class RecipeListViewModel : ViewModel() {
   val isError: LiveData<Boolean>
     get() = _isError
 
-  var errorMessage: String = ""
-    private set
+  private var errorMessage: String = ""
 
   fun getRecipeData(phrase: String) {
     _isLoading.value = true

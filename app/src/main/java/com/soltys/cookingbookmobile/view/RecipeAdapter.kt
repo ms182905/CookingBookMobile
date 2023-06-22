@@ -1,5 +1,6 @@
 package com.soltys.cookingbookmobile.view
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,7 @@ import com.squareup.picasso.Picasso
 
 class RecipeAdapter(private val context: Activity, private val arrayList: ArrayList<Recipe>) :
     ArrayAdapter<Recipe>(context, R.layout.list_item, arrayList) {
+  @SuppressLint("InflateParams", "ViewHolder")
   override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
     val inflater: LayoutInflater = LayoutInflater.from(context)
     val view: View = inflater.inflate(R.layout.list_item, null)

@@ -5,4 +5,4 @@ data class Recipe(
     var picture_url: String,
     var description: String,
     var apiId: Int
-) {}
+)

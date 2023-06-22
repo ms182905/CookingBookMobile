@@ -32,7 +32,7 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
   }
 
   override fun onUpgrade(db: SQLiteDatabase, p1: Int, p2: Int) {
-    db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME)
+    db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
     onCreate(db)
   }
 
@@ -53,7 +53,7 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
     val db = this.readableDatabase
     val recipeList = ArrayList<Recipe>()
 
-    val cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME, null)
+    val cursor = db.rawQuery("SELECT * FROM $TABLE_NAME", null)
     if (cursor.moveToFirst()) {
       recipeList.add(
           Recipe(
@@ -81,7 +81,7 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
 
   fun isInDatabase(id: String): Boolean {
     val db = this.readableDatabase
-    val cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE id='$id'", null)
+    val cursor = db.rawQuery("SELECT * FROM $TABLE_NAME WHERE id='$id'", null)
 
     if (cursor.moveToFirst()) {
       cursor.close()
@@ -109,31 +109,34 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
   @SuppressLint("Range")
   fun getRecipeNote(id: String): String {
     val db = this.readableDatabase
-    val cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE id='$id'", null)
+    val cursor = db.rawQuery("SELECT * FROM $TABLE_NAME WHERE id='$id'", null)
 
     if (cursor.moveToFirst() && cursor.getString(cursor.getColumnIndex(NOTE_COL)) != null) {
-      return cursor.getString(cursor.getColumnIndex(NOTE_COL))
+      val output = cursor.getString(cursor.getColumnIndex(NOTE_COL))
+      cursor.close()
+      return output
     }
 
+    cursor.close()
     return ""
   }
 
   companion object {
 
-    private val DATABASE_NAME = "RECIPE_STORAGE"
+    private const val DATABASE_NAME = "RECIPE_STORAGE"
 
-    private val DATABASE_VERSION = 3
+    private const val DATABASE_VERSION = 3
 
-    val TABLE_NAME = "recipe_table"
+    const val TABLE_NAME = "recipe_table"
 
-    val ID_COL = "id"
+    const val ID_COL = "id"
 
-    val NAME_COl = "name"
+    const val NAME_COl = "name"
 
-    val DESCRIPTION_COL = "description"
+    const val DESCRIPTION_COL = "description"
 
-    val PICTURE_URL_COL = "picture_url"
+    const val PICTURE_URL_COL = "picture_url"
 
-    val NOTE_COL = "note"
+    const val NOTE_COL = "note"
   }
 }

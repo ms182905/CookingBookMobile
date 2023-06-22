@@ -35,6 +35,7 @@ class FavouriteRecipeDetailsFragment : Fragment() {
     return binding.root
   }
 
+  @Suppress("DEPRECATION")
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
@@ -63,12 +64,6 @@ class FavouriteRecipeDetailsFragment : Fragment() {
 
         Toast.makeText(activity, "Added to favourites", Toast.LENGTH_LONG).show()
       }
-
-      println(recipeDetailsData.id)
-
-      val recipeList = db.getRecipes()
-
-      println(recipeList)
     }
   }
 
@@ -77,6 +72,7 @@ class FavouriteRecipeDetailsFragment : Fragment() {
     _binding = null
   }
 
+  @Suppress("DEPRECATION")
   private fun setResults(recipeDetailsData: RecipeDetailsResponse) {
     var preparationSteps = ""
     recipeDetailsData.instructions?.forEach { it -> preparationSteps += it?.displayText!! + "\n\n" }
@@ -86,7 +82,7 @@ class FavouriteRecipeDetailsFragment : Fragment() {
       it?.components?.forEach { component ->
         run {
           if (component?.rawText!! != "n/a") {
-            ingredients += component?.rawText!! + "\n"
+            ingredients += component.rawText + "\n"
           }
         }
       }

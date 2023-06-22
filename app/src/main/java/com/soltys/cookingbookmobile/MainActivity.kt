@@ -6,8 +6,6 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.findNavController
@@ -18,15 +16,13 @@ import com.soltys.cookingbookmobile.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity(), SensorEventListener {
 
-  var sensorManager:SensorManager?=null
-  var sensor:Sensor?=null
+  private var sensorManager: SensorManager? = null
+  private var sensor: Sensor? = null
 
-  var nightStyle:Boolean = false
+  private var nightStyle: Boolean = false
 
   private lateinit var appBarConfiguration: AppBarConfiguration
   private lateinit var binding: ActivityMainBinding
-
-
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -61,16 +57,14 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
   override fun onSensorChanged(event: SensorEvent?) {
     println(event!!.values[0])
-    if (event!!.values[0] < 15000 && !nightStyle) {
+    if (event.values[0] < 15000 && !nightStyle) {
       AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
       nightStyle = true
-    }
-    else if (event!!.values[0] >= 15000 && nightStyle) {
+    } else if (event.values[0] >= 15000 && nightStyle) {
       AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
       nightStyle = false
     }
   }
 
-  override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
-  }
+  override fun onAccuracyChanged(p0: Sensor?, p1: Int) {}
 }
